@@ -52,6 +52,12 @@ public class ShipTest {
 		assertFalse(ocean.isOccupied(6, 8));
 	}
 	
+	@Test(expected=RuntimeException.class)
+	public void testplaceShipAtOccupiedLocation(){
+		cruiser.placeShipAt(5, 6, false, ocean); // should occupy (5,6), (5,7) and (5,8)
+		battleship.placeShipAt(4, 7, true, ocean); // should occupy (4, 7), (5, 7), (6, 7) and (7,7)
+	}
+	
 	@Test
 	public void testshipOccupiesSpace(){
 		battleship.placeShipAt(0, 0, true, ocean); // should occupy (0,0), (1,0), (2,0) and (3,0)
@@ -83,6 +89,9 @@ public class ShipTest {
 		assertTrue(cruiser.shootAt(5, 8));
 		assertTrue(cruiser.hit[2]);
 		assertFalse(cruiser.hit[1]);
+		
+		emptySea.placeShipAt(0, 0, true, ocean);
+		assertFalse(emptySea.shootAt(0, 0));
 	}
 	
 	@Test
@@ -93,6 +102,25 @@ public class ShipTest {
 		assertFalse(cruiser.isSunk());
 		cruiser.shootAt(5, 7);
 		cruiser.shootAt(5, 8);
-		assertTrue(cruiser.isSunk());	
+		assertTrue(cruiser.isSunk());
+
+		emptySea.placeShipAt(0, 0, true, ocean);
+		emptySea.shootAt(0, 0);
+		assertFalse(emptySea.isSunk());
 	}
+	
+	@Test
+	public void testtoString(){
+		cruiser.placeShipAt(5, 6, false, ocean); // should occupy (5,6), (5,7) and (5,8)
+		assertEquals("S", cruiser.toString());
+		cruiser.shootAt(5, 6);
+		assertEquals("S", cruiser.toString());
+		cruiser.shootAt(5, 7);
+		cruiser.shootAt(5, 8);
+		assertEquals("x", cruiser.toString());
+		assertEquals("-", ocean.ships[0][0].toString()); // should be empty sea
+	}
+
+	
+	
 }

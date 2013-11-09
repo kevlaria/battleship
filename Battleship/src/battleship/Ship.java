@@ -62,6 +62,8 @@ public class Ship {
 					ocean.ships[row][column + i] = this;
 					}			
 				}
+			} else {
+				throw new RuntimeException("Location (" + row + ", " + column + ") is occupied!");
 			}
 	}
 	

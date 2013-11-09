@@ -14,7 +14,11 @@ public class Battleship extends Ship {
 	
 	@Override
 	public String toString(){
-		return "S";
+		if (this.isSunk()){
+			return "x";
+		} else {
+			return "S";			
+		}
 	}
 	
 }
