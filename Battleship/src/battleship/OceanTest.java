@@ -5,12 +5,19 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class BattleshipTest {
+public class OceanTest {
 
+	private Ship ship;
+	private Ocean ocean;
+	private EmptySea emptySea;
+	private Battleship battleship;
+	
 	@Before
 	public void setUp() throws Exception {
-		Ship ship = new Ship();
-		Ocean ocean = new Ocean();
+		ship = new Ship();
+		ocean = new Ocean();
+		emptySea = new EmptySea();
+		battleship = new Battleship();
 	}
 
 	
@@ -25,16 +32,6 @@ public class BattleshipTest {
 		// Need test cases when battleship is added
 	}
 
-	
-	/******
-	 * Ship method testers
-	 * ******
-	 */
-	
-	@Test
-	public void testgetShipType(){
-		assertEquals(null, ship.getShipType());
-		// Need test cases for 
-	}
+
 
 }

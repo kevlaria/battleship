@@ -14,7 +14,10 @@ public class BattleShipGame {
 		EmptySea emptySea = new EmptySea();
 		System.out.println(emptySea.getLength());
 		Ocean ocean = new Ocean();
-//		System.out.println(ocean.ships[9][9].toString());
+		System.out.println(ocean.isOccupied(9, 9));
+		Battleship battleship = new Battleship();
+		battleship.placeShipAt(0, 0, true, ocean);
+		
 
 	}
 
