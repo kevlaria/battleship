@@ -162,6 +162,11 @@ public class Ship {
 		}
 	}
 	
+	/**
+	 * Returns the coordinates of the ship. Each coordinate is a 2-element array of integers 
+	 * in the form array[0] = x and array[1] = y
+	 * @return
+	 */
 	public ArrayList<int[]> shipLocation(){
 		
 		ArrayList<int[]> shipLocation = new ArrayList<int[]>();
