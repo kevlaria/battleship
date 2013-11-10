@@ -127,9 +127,6 @@ public class ShipTest {
 	public void testShipLocation(){
 		cruiser.placeShipAt(5, 6, false, ocean); // should occupy (5,6), (5,7) and (5,8)
 		ArrayList<int[]> shipLocation = cruiser.shipLocation();
-		int[] location1 = new int[2];
-		location1[0] = 5;
-		location1[1] = 6;
 		assertEquals(3, shipLocation.size());
 		assertEquals(5, shipLocation.get(0)[0]);
 		assertEquals(6, shipLocation.get(0)[1]);
@@ -137,6 +134,18 @@ public class ShipTest {
 		assertEquals(7, shipLocation.get(1)[1]);
 		assertEquals(5, shipLocation.get(2)[0]);
 		assertEquals(8, shipLocation.get(2)[1]);
+		
+		battleship.placeShipAt(0, 0, true, ocean); // should occupy (0,0), (1,0), (2,0) and (3,0)
+		ArrayList<int[]> shipLocation2 = battleship.shipLocation();
+		assertEquals(4, shipLocation2.size());
+		assertEquals(0, shipLocation2.get(0)[0]);
+		assertEquals(0, shipLocation2.get(0)[1]);
+		assertEquals(1, shipLocation2.get(1)[0]);
+		assertEquals(0, shipLocation2.get(1)[1]);
+		assertEquals(2, shipLocation2.get(2)[0]);
+		assertEquals(0, shipLocation2.get(2)[1]);
+		assertEquals(3, shipLocation2.get(3)[0]);
+		assertEquals(0, shipLocation2.get(3)[1]);	
 	}
 
 	
