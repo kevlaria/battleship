@@ -23,7 +23,17 @@ public class Ship {
 	 * @return
 	 */
 	public boolean okToPlaceShipAt(int row, int column, boolean horizontal, Ocean ocean) {
-	boolean okToPlace = true;
+		return true;
+//		if (!this.stickOut()){
+//			if(!this.overlaps()){
+//				if(!this.touchAnotherShip()){
+//					return true;
+//				}
+//			}
+//		}
+//	
+//	return false;
+	
 
 	// need to fill in with code
 	// Three conditions:
@@ -33,8 +43,7 @@ public class Ship {
 	// 		- touchAnotherShipVertically(), 
 	// 		- touchAnotherShipHorizontally(),
 	//		- touchAnotherShipDiagonally())
-	
-	return okToPlace;
+
 	}	
 	
 	/**
@@ -87,6 +96,127 @@ public class Ship {
 				return true;
 			}
 		}
+	}
+	
+	public boolean touchAnotherShip(int row, int column, boolean horizontal, Ocean ocean) {
+		return (this.touchAnotherShipVertically(row, column, horizontal, ocean) || this.touchAnotherShipHorizontally(row, column, horizontal, ocean) || this.touchAnotherShipDiagonally(row, column, horizontal, ocean));
+	}
+	
+	
+	/**
+	 * Determines whether the top and bottom flank of the potential ship location touches another ship.
+	 * Returns true if flank touch.
+	 * @param row
+	 * @param column
+	 * @param horizontal
+	 * @param ocean
+	 * @return
+	 */
+	public boolean touchAnotherShipHorizontally(int row, int column, boolean horizontal, Ocean ocean){
+		ArrayList<int[]> location = this.shipPotentialLocation(row, column, horizontal);
+		for (int[] coordinate : location){
+
+			// We need to check if the space one above and one below of the current coordinate is occupied or not,
+			// unless ship is on the top / bottom edge
+			int xCoordinate = coordinate[0];			
+			int yCoordinate = coordinate[1];		
+			if ( yCoordinate > 0){
+				if(ocean.isOccupied(xCoordinate, yCoordinate - 1)){
+					return true;
+				}
+			}
+			if (yCoordinate < 9){
+				if(ocean.isOccupied(xCoordinate, yCoordinate + 1)){
+					return true;
+				}	
+			}
+		}
+		return false;		
+	}
+	
+	
+	/**
+	 * Determines whether the left and right flank of the potential ship location touches another ship. 
+	 * Returns true if flanks touch.
+	 * @param row
+	 * @param column
+	 * @param horizontal
+	 * @param ocean
+	 * @return
+	 */
+	public boolean touchAnotherShipVertically(int row, int column, boolean horizontal, Ocean ocean) {
+		ArrayList<int[]> location = this.shipPotentialLocation(row, column, horizontal);
+		for (int[] coordinate : location){
+
+			// We need to check if the space one left and one right of the current coordinate is occupied or not,
+			// unless ship is on the left / right edge
+			int xCoordinate = coordinate[0];			
+			int yCoordinate = coordinate[1];		
+			if (xCoordinate > 0){
+				if(ocean.isOccupied(xCoordinate - 1, yCoordinate)){
+					return true;
+				}
+			}
+			if (xCoordinate < 9){
+				if(ocean.isOccupied(xCoordinate + 1, yCoordinate)){
+					return true;
+				}	
+			}
+		}
+		return false;	
+	}
+	
+	public boolean touchAnotherShipDiagonally(int row, int column, boolean horizontal, Ocean ocean) {
+		ArrayList<int[]> location = this.shipPotentialLocation(row, column, horizontal);
+		for (int [] coordinate : location) {
+			int xCoordinate = coordinate[0];
+			int yCoordinate = coordinate[1];
+			if (xCoordinate > 0 && yCoordinate > 0){
+				if(ocean.isOccupied(xCoordinate - 1, yCoordinate-1) || ocean.isOccupied(xCoordinate+1, yCoordinate-1)){
+					return true;
+				}
+			}
+			if (xCoordinate < 9 && yCoordinate <9){
+				if(ocean.isOccupied(xCoordinate-1, yCoordinate+1) || ocean.isOccupied(xCoordinate+1, yCoordinate+1)){
+					return true;
+				}	
+			}
+		}
+
+		return false;	
+	}
+	/**
+	 * checks if the potential ship location is occupied by another ship or not. Returns true if the postiions are occupied.
+	 * @param row
+	 * @param column
+	 * @param horizontal
+	 * @param ocean
+	 * @return
+	 */
+	public boolean overlaps(int row, int column, boolean horizontal, Ocean ocean) {
+		ArrayList<int[]> potentialLocation = shipPotentialLocation(row, column, horizontal);
+		for (int i=0;i<potentialLocation.size();i++) {
+			
+				int xCoordinate = potentialLocation.get(i)[0];
+				int yCoordinate = potentialLocation.get(i)[1];
+				if (ocean.isOccupied(xCoordinate, yCoordinate)){
+					return true;
+				}
+		}
+		return false;
+	}
+	
+	public boolean stickOut(int row, int column, boolean horizontal, Ocean ocean){
+		ArrayList<int[]> location = this.shipPotentialLocation(row, column, horizontal);
+		for (int[] coordinate : location){
+			if (coordinate[0] < 0 || coordinate[0] > 9){
+				return true;
+			} 		
+			if (coordinate[1] < 0 || coordinate[1] > 9){
+				return true;
+			} 
+		}	
+		return false;	
 	}
 	
 	/**
@@ -163,25 +293,27 @@ public class Ship {
 	}
 	
 	/**
-	 * Returns the coordinates of the ship. Each coordinate is a 2-element array of integers 
+	 * Returns the potential coordinates of the ship (that has yet to be placed), 
+	 * assuming that it will be placed in row,column. 
+	 * Each coordinate is a 2-element array of integers 
 	 * in the form array[0] = x and array[1] = y
 	 * @return
 	 */
-	public ArrayList<int[]> shipLocation(){
+	public ArrayList<int[]> shipPotentialLocation(int row, int column, boolean horizontal){
 		
 		ArrayList<int[]> shipLocation = new ArrayList<int[]>();
-		if (this.horizontal){
+		if (horizontal){
 			for (int i = 0; i < this.length; i++){
 				int[] shipCoordinates = new int[2];
-				shipCoordinates[0] = this.bowRow + i;
-				shipCoordinates[1] = this.bowColumn;
+				shipCoordinates[0] = row + i;
+				shipCoordinates[1] = column;
 				shipLocation.add(shipCoordinates);
 			}
 		} else {
 			for (int i = 0; i < this.length; i++){
 				int[] shipCoordinates = new int[2];
-				shipCoordinates[0] = this.bowRow;
-				shipCoordinates[1] = this.bowColumn + i;
+				shipCoordinates[0] = row;
+				shipCoordinates[1] = column + i;
 				shipLocation.add(shipCoordinates);		
 			}
 		}

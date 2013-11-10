@@ -14,6 +14,7 @@ public class ShipTest {
 	private EmptySea emptySea;
 	private Battleship battleship;
 	private Cruiser cruiser;
+	private Submarine submarine;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -22,6 +23,7 @@ public class ShipTest {
 		emptySea = new EmptySea();
 		battleship = new Battleship();
 		cruiser = new Cruiser();
+		submarine = new Submarine();
 	}
 
 	/******
@@ -125,8 +127,7 @@ public class ShipTest {
 	
 	@Test
 	public void testShipLocation(){
-		cruiser.placeShipAt(5, 6, false, ocean); // should occupy (5,6), (5,7) and (5,8)
-		ArrayList<int[]> shipLocation = cruiser.shipLocation();
+		ArrayList<int[]> shipLocation = cruiser.shipPotentialLocation(5, 6, false); // should occupy (5,6), (5,7) and (5,8)
 		assertEquals(3, shipLocation.size());
 		assertEquals(5, shipLocation.get(0)[0]);
 		assertEquals(6, shipLocation.get(0)[1]);
@@ -135,8 +136,7 @@ public class ShipTest {
 		assertEquals(5, shipLocation.get(2)[0]);
 		assertEquals(8, shipLocation.get(2)[1]);
 		
-		battleship.placeShipAt(0, 0, true, ocean); // should occupy (0,0), (1,0), (2,0) and (3,0)
-		ArrayList<int[]> shipLocation2 = battleship.shipLocation();
+		ArrayList<int[]> shipLocation2 = battleship.shipPotentialLocation(0, 0, true); // should occupy (0,0), (1,0), (2,0) and (3,0)
 		assertEquals(4, shipLocation2.size());
 		assertEquals(0, shipLocation2.get(0)[0]);
 		assertEquals(0, shipLocation2.get(0)[1]);
@@ -148,6 +148,118 @@ public class ShipTest {
 		assertEquals(0, shipLocation2.get(3)[1]);	
 	}
 
+	@Test
+	public void testtouchAnotherShip(){
+		battleship.placeShipAt(5, 5, true, ocean); // should occupy (5,0), (6,0), (7,0) and (8,0)
+		assertTrue(cruiser.touchAnotherShip(0, 1, true));
+		assertTrue(cruiser.touchAnotherShip(0, 1, false));
+		assertFalse(cruiser.touchAnotherShip(0, 1, false));
+	}
+	
+//	@Test
+//	public void testtouchAnotherShipVertically(){
+//		battleship.placeShipAt(0, 0, true, ocean); // should occupy (0,0), (1,0), (2,0) and (3,0)
+//		assertTrue()
+//	}
+	
+	@Test
+	public void testoverlaps(){
+		battleship.placeShipAt(5, 5, true, ocean); // should occupy (5,5), (6,5), (7,5) and (8,5)
+		assertTrue(cruiser.overlaps(5, 5, true, ocean));
+		assertTrue(cruiser.overlaps(8, 5, true, ocean));
+		assertTrue(cruiser.overlaps(6, 4, false, ocean));
+		assertFalse(cruiser.overlaps(6, 4, true, ocean));
+		assertFalse(cruiser.overlaps(6, 6, false, ocean));
+		assertTrue(submarine.overlaps(6, 5, false, ocean));
+	}
+	
+	@Test
+	public void testtouchAnotherShipVertically(){
+		battleship.placeShipAt(5, 5, true, ocean); // should occupy (5,5), (6,5), (7,5) and (8,5)		
+		assertTrue(cruiser.touchAnotherShipVertically(4, 5, false, ocean));
+		assertFalse(cruiser.touchAnotherShipVertically(4, 6, false, ocean));
+		assertTrue(cruiser.touchAnotherShipVertically(9, 3, false, ocean));
+		assertFalse(cruiser.touchAnotherShipVertically(9, 2, false, ocean));
+		assertTrue(cruiser.touchAnotherShipVertically(2, 5, true, ocean));
+		assertFalse(cruiser.touchAnotherShipVertically(1, 5, true, ocean));
+		assertTrue(submarine.touchAnotherShipVertically(9, 5, true, ocean));
+		assertFalse(submarine.touchAnotherShipVertically(8, 6, true, ocean));
+		
+		battleship.placeShipAt(1, 1, true, ocean); // should occupy (1,1), (2,1), (3,1) and (4,1)		
+		assertTrue(cruiser.touchAnotherShipVertically(0, 0, false, ocean));
+		assertFalse(submarine.touchAnotherShipVertically(0, 0, false, ocean));
+
+		battleship.placeShipAt(5, 8, true, ocean); // should occupy (5,8), (6,8), (7,8) and (8,8)			
+		assertTrue(submarine.touchAnotherShipVertically(9, 8, true, ocean));
+		assertFalse(submarine.touchAnotherShipVertically(9, 9, true, ocean));
+
+	}
+	
+	@Test
+	public void testtouchAnotherShipHorizontally(){
+		battleship.placeShipAt(5, 5, false, ocean); // should occupy (5,5), (5,6), (5,7) and (5,8)		
+		assertTrue(cruiser.touchAnotherShipHorizontally(5, 4, true, ocean));
+		assertTrue(cruiser.touchAnotherShipHorizontally(3, 4, true, ocean));
+		assertFalse(cruiser.touchAnotherShipHorizontally(2, 4, true, ocean));
+		assertTrue(cruiser.touchAnotherShipHorizontally(4, 9, true, ocean));
+		assertTrue(submarine.touchAnotherShipHorizontally(5,9, true, ocean));
+
+		battleship.placeShipAt(1, 1, true, ocean); // should occupy (1,1), (2,1), (3,1) and (4,1)			
+		assertTrue(submarine.touchAnotherShipHorizontally(1, 0, true, ocean));
+		assertFalse(submarine.touchAnotherShipHorizontally(0, 0, true, ocean));
+
+		battleship.placeShipAt(5, 8, true, ocean); // should occupy (5,8), (6,8), (7,8) and (8,8)			
+		assertTrue(submarine.touchAnotherShipHorizontally(8, 9, true, ocean));
+		assertFalse(submarine.touchAnotherShipHorizontally(9, 9, true, ocean));
+
+		
+	}
+	
+	@Test
+	public void testtouchAnotherShipDiagonally(){
+		battleship.placeShipAt(5, 5, false, ocean);   // should occupy (5,5), (5,6), (5,7) and (5,8)
+		assertTrue(cruiser.touchAnotherShipDiagonally(4, 6, true, ocean));
+		//assertTrue(cruiser.touchAnotherShipDiagonally(row, column, true, ocean))
+		
+		submarine.placeShipAt(1, 1, true, ocean);
+		assertTrue(submarine.touchAnotherShipDiagonally(0, 0, true, ocean));
+		assertTrue(submarine.touchAnotherShipDiagonally(2, 0, true, ocean));
+		assertTrue(submarine.touchAnotherShipDiagonally(0, 2, true, ocean));
+		assertTrue(submarine.touchAnotherShipDiagonally(2, 2, true, ocean));
+		assertFalse(submarine.touchAnotherShipDiagonally(1, 1, true, ocean));
+		assertFalse(submarine.touchAnotherShipDiagonally(1, 0, true, ocean));
+		assertFalse(submarine.touchAnotherShipDiagonally(0, 1, true, ocean));
+		
+		submarine.placeShipAt(8, 0, true, ocean);
+		assertFalse(submarine.touchAnotherShipDiagonally(9, 0, true, ocean));
+		assertFalse(submarine.touchAnotherShipDiagonally(8, 1, true, ocean));
+		assertTrue(submarine.touchAnotherShipDiagonally(9, 1, true, ocean));
+		assertTrue(submarine.touchAnotherShipDiagonally(7, 1, true, ocean));
+		
+		submarine.placeShipAt(8, 8, true, ocean);
+		assertTrue(submarine.touchAnotherShipDiagonally(9, 9, true, ocean));
+		assertTrue(submarine.touchAnotherShipDiagonally(7, 9, true, ocean));
+		assertTrue(submarine.touchAnotherShipDiagonally(7, 7, true, ocean));
+		assertTrue(submarine.touchAnotherShipDiagonally(9, 7, true, ocean));
+		
+		
+	}
+	
+	@Test
+	public void teststickOut(){
+		assertFalse(battleship.stickOut(0, 0, true, ocean));
+		assertFalse(battleship.stickOut(0, 0, false, ocean));
+		assertTrue(battleship.stickOut(7, 0, true, ocean));
+		assertTrue(battleship.stickOut(0, 7, false, ocean));
+		
+		assertFalse(cruiser.stickOut(0, 7, false, ocean));
+		assertTrue(cruiser.stickOut(0, 8, false, ocean));
+	
+		assertFalse(cruiser.stickOut(7, 0, true, ocean));
+		assertTrue(cruiser.stickOut(8, 0, true, ocean));
+		
+	}
+	
 	
 	
 }
