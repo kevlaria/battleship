@@ -161,6 +161,27 @@ public class Ship {
 			return shipPart;
 		}
 	}
+	
+	public ArrayList<int[]> shipLocation(){
+		
+		ArrayList<int[]> shipLocation = new ArrayList<int[]>();
+		if (this.horizontal){
+			for (int i = 0; i < this.length; i++){
+				int[] shipCoordinates = new int[2];
+				shipCoordinates[0] = this.bowRow + i;
+				shipCoordinates[1] = this.bowColumn;
+				shipLocation.add(shipCoordinates);
+			}
+		} else {
+			for (int i = 0; i < this.length; i++){
+				int[] shipCoordinates = new int[2];
+				shipCoordinates[0] = this.bowRow;
+				shipCoordinates[1] = this.bowColumn + i;
+				shipLocation.add(shipCoordinates);		
+			}
+		}
+		return shipLocation;
+	}
 		
 	
 	

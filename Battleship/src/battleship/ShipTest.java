@@ -2,6 +2,8 @@ package battleship;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -119,6 +121,22 @@ public class ShipTest {
 		cruiser.shootAt(5, 8);
 		assertEquals("x", cruiser.toString());
 		assertEquals("-", ocean.ships[0][0].toString()); // should be empty sea
+	}
+	
+	@Test
+	public void testShipLocation(){
+		cruiser.placeShipAt(5, 6, false, ocean); // should occupy (5,6), (5,7) and (5,8)
+		ArrayList<int[]> shipLocation = cruiser.shipLocation();
+		int[] location1 = new int[2];
+		location1[0] = 5;
+		location1[1] = 6;
+		assertEquals(3, shipLocation.size());
+		assertEquals(5, shipLocation.get(0)[0]);
+		assertEquals(6, shipLocation.get(0)[1]);
+		assertEquals(5, shipLocation.get(1)[0]);
+		assertEquals(7, shipLocation.get(1)[1]);
+		assertEquals(5, shipLocation.get(2)[0]);
+		assertEquals(8, shipLocation.get(2)[1]);
 	}
 
 	
