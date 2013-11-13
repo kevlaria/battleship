@@ -1,9 +1,5 @@
 package battleship;
 
-/**
- * @author priyank
- *
- */
 public class BattleShipGame {
 
 	/**

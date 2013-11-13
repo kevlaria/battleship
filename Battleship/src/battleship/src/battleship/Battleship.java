@@ -17,8 +17,10 @@ public class Battleship extends Ship {
 		if (this.isSunk()){
 			return "x";
 		} else {
+						
 			return "S";			
 		}
 	}
 	
 }
+
