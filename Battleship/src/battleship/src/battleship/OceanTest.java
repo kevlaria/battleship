@@ -11,6 +11,9 @@ public class OceanTest {
 	private Ocean ocean;
 	private EmptySea emptySea;
 	private Battleship battleship;
+	private Submarine submarine;
+	private Destroyer destroyer;
+	private Cruiser cruiser;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -18,6 +21,9 @@ public class OceanTest {
 		ocean = new Ocean();
 		emptySea = new EmptySea();
 		battleship = new Battleship();
+		submarine = new Submarine();
+		destroyer = new Destroyer();
+		cruiser = new Cruiser();
 	}
 
 	
@@ -34,11 +40,65 @@ public class OceanTest {
 	}
 
 	
-//	@Test
-//	public void testshootAtOcean(){
-//		battleship.placeShipAt(1, 1, true, ocean); // should occupy (1,1), (2,1), (3,1) and (4,1)			
-//		assertFalse(ocean.shootAt(0,0));	
-//	}
+	@Test
+	public void testshootAtOcean(){
+		battleship.placeShipAt(1, 1, true, ocean); // should occupy (1,1), (2,1), (3,1) and (4,1)
+		assertFalse(ocean.shootAt(0,0));
+		assertTrue(ocean.shootAt(1, 1));
+		assertTrue(ocean.shootAt(2, 1));
+		assertTrue(battleship.hit[0]);
+		assertTrue(battleship.hit[1]);
+		assertFalse(battleship.hit[2]);
+		assertEquals(3, ocean.getShotsFired());
+		assertEquals(2, ocean.getHitCount());
+		
+		assertEquals(0, ocean.getShipsSunk());
+		submarine.placeShipAt(9,9, true, ocean);
+		assertTrue(ocean.shootAt(9,  9));
+		assertEquals(1, ocean.getShipsSunk());
+
+		assertTrue(ocean.shootAt(3,  1));
+		assertTrue(ocean.shootAt(4,  1));
+		assertEquals(2, ocean.getShipsSunk());
+
+	}
+	
+	@Test
+	public void testisGameOver(){
+		Submarine sub1 = new Submarine();
+		Submarine sub2 = new Submarine();
+		Submarine sub3 = new Submarine();
+		Submarine sub4 = new Submarine();
+		Submarine sub5 = new Submarine();
+		Submarine sub6 = new Submarine();
+		Submarine sub7 = new Submarine();
+		Submarine sub8 = new Submarine();
+		Submarine sub9 = new Submarine();
+		Submarine sub10 = new Submarine();
+		sub1.placeShipAt(9,9, true, ocean);
+		sub2.placeShipAt(7,9, true, ocean);
+		sub3.placeShipAt(5,9, true, ocean);
+		sub4.placeShipAt(3,9, true, ocean);
+		sub5.placeShipAt(1,9, true, ocean);
+		sub6.placeShipAt(9,7, true, ocean);
+		sub7.placeShipAt(9,5, true, ocean);
+		sub8.placeShipAt(9,3, true, ocean);
+		sub9.placeShipAt(9,1, true, ocean);
+		sub10.placeShipAt(1,1, true, ocean);
+		assertFalse(ocean.isGameOver());
+		ocean.shootAt(9, 9);
+		ocean.shootAt(7, 9);
+		ocean.shootAt(5, 9);
+		ocean.shootAt(3, 9);
+		ocean.shootAt(1, 9);
+		ocean.shootAt(9, 7);
+		ocean.shootAt(9, 5);
+		ocean.shootAt(9, 3);
+		ocean.shootAt(9, 1);
+		ocean.shootAt(1, 1);
+		assertTrue(ocean.isGameOver());
+		
+	}
 	
 	@Test
 	public void testsetupFleet(){
@@ -61,17 +121,16 @@ public class OceanTest {
 			for (int j = 0; j < 10; j++){
 				Ship[][] ships = ocean.getShipArray();
 				String shipType = ships[i][j].getShipType();
-				switch (shipType){
-					case "Battleship":
-						numberOfBattleships ++;
-					case "Cruiser":
-						numberOfCruisers ++;
-					case "Destroyer":
-						numberOfDestroyers ++;
-					case "Submarine":
-						numberOfSubmarines ++;
-					case "EmptySea":
-						numberOfEmptySea ++;
+				if (shipType.equals("Battleship")){
+					numberOfBattleships ++;					
+				} else if (shipType.equals("Cruiser")){
+					numberOfCruisers ++;					
+				} else if (shipType.equals("Destroyer")){
+					numberOfDestroyers ++;
+				} else if (shipType.equals("Submarine")){
+					numberOfSubmarines ++;					
+				} else {
+					numberOfEmptySea ++;					
 				}
 			}
 		}

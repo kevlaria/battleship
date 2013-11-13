@@ -5,6 +5,9 @@ public class Cruiser extends Ship{
 	public Cruiser(){
 		this.length = 3;
 		this.hit = new boolean[3];
+		for (int i = 0; i < hit.length; i++){
+			this.hit[i] = false;
+		}
 	}
 	
 	@Override

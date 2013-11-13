@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Ocean {
 
-	protected Ship[][] ships = new Ship[10][10];
+	private Ship[][] ships = new Ship[10][10];
 	private int shotsFired;    //-- The total number of shots fired by the user.
 	private int hitCount;    // -- The number of times a shot hit a ship. If the user shoots the same part of a ship more than once, every hit is counted, even though the additional "hits" don't do the user any good.
 	private int shipsSunk;
@@ -101,6 +101,7 @@ public class Ocean {
 	 * updates the number of shots that have been fired
 	 * updates the number of hits (regardless of whether the same square has been hit > 1 times)
 	 * Updates the ship's hit boolean array if the hit is successful
+	 * updates number of ships sunk if ship is sunk
 	 * @param row
 	 * @param column
 	 * @return true if ship has been hit
@@ -109,8 +110,11 @@ public class Ocean {
 		shotsFired ++;
 		if(isOccupied(row, column)){
 			Ship ship = this.getShipArray()[row][column];
-			if (!ship.shootAt(row, column)){
+			if (ship.shootAt(row, column)){
 				hitCount ++;
+				if(ship.isSunk()){
+					this.shipsSunk ++;
+				}
 				return true;
 			}
 			else {
@@ -119,6 +123,8 @@ public class Ocean {
 		}
 		return false; // Not occupied therefore EmptySea
 	}
+	
+
 	
 	
 	public void print(){
@@ -136,5 +142,30 @@ public class Ocean {
 			}		
 		}
 	}
+	
+	public boolean isGameOver(){
+		if (this.shipsSunk >= 10){
+			return true;
+		}
+		return false;
+	}
+	
+	/************
+	 * GETTERS AND SETTERS
+	 * *************
+	 */
+	
+	public int getShotsFired(){
+		return this.shotsFired;
+	}
+	
+	public int getHitCount(){
+		return this.hitCount;
+	}
+	
+	public int getShipsSunk(){
+		return this.shipsSunk;
+	}
+
 	
 }

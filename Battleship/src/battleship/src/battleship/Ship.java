@@ -44,14 +44,15 @@ public class Ship {
 			this.bowColumn = column;
 			this.bowRow = row;
 			this.horizontal = horizontal;
+			Ship[][] ships = ocean.getShipArray();
 			
 			if (this.horizontal){
 				for (int i = 0; i < this.length; i++){
-					ocean.ships[row + i][column] = this;					
+					ships[row + i][column] = this;					
 				} 
 			} else {
 				for (int i = 0; i < this.length; i++){
-					ocean.ships[row][column + i] = this;
+					ships[row][column + i] = this;
 					}			
 				}
 			} else {
@@ -313,7 +314,7 @@ public class Ship {
 	 * @return true if all elements of the ship's hit array is true
 	 */
 	public boolean isSunk(){
-		for (int i = 0; i < this.length - 1; i++){
+		for (int i = 0; i < this.hit.length; i++){
 			if (hit[i] == false){
 				return false;
 			}

@@ -113,6 +113,10 @@ public class ShipTest {
 		emptySea.placeShipAt(0, 0, true, ocean);
 		emptySea.shootAt(0, 0);
 		assertFalse(emptySea.isSunk());
+		
+		submarine.placeShipAt(9, 9, true, ocean);
+		assertFalse(submarine.isSunk());
+		
 	}
 	
 	@Test
