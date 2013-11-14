@@ -8,11 +8,13 @@ public class Ocean {
 	private int shotsFired;    //-- The total number of shots fired by the user.
 	private int hitCount;    // -- The number of times a shot hit a ship. If the user shoots the same part of a ship more than once, every hit is counted, even though the additional "hits" don't do the user any good.
 	private int shipsSunk;
+	private boolean[][] shotsFiredAccumulated = new boolean[10][10];
 	
 	public Ocean() {
 		for (int i = 0; i < 10; i++){
 			for (int j = 0; j < 10; j++){		
-				ships[i][j] = new EmptySea();	
+				ships[i][j] = new EmptySea();
+				shotsFiredAccumulated[i][j] = false;
 			}
 		}
 	}
@@ -98,20 +100,21 @@ public class Ocean {
 	/**
 	 * Returns true if the given location contains 
 	 * a "real" ship, still afloat, (not an EmptySea), false if it does not.
-	 * updates the number of shots that have been fired
-	 * updates the number of hits (regardless of whether the same square has been hit > 1 times)
-	 * Updates the ship's hit boolean array if the hit is successful
-	 * updates number of ships sunk if ship is sunk
+	 * - updates the number of shots that have been fired
+	 * - Updates shotsFiredAccumulated (array of all shots that have been fired in the game)
+	 * - updates the number of hits (regardless of whether the same square has been hit > 1 times)
+	 * - Updates the ship's hit boolean array if the hit is successful
+	 * - updates number of ships sunk if ship is sunk
 	 * @param row
 	 * @param column
 	 * @return true if ship has been hit
 	 */
 	public boolean shootAt(int row, int column){
-		shotsFired ++;
+		this.updateShotsFired(row, column);
 		if(isOccupied(row, column)){
 			Ship ship = this.getShipArray()[row][column];
 			if (ship.shootAt(row, column)){
-				hitCount ++;
+				this.hitCount ++;
 				if(ship.isSunk()){
 					this.shipsSunk ++;
 				}
@@ -124,25 +127,66 @@ public class Ocean {
 		return false; // Not occupied therefore EmptySea
 	}
 	
+	
+	/**
+	 * - updates the number of shots that have been fired
+	 * - Updates shotsFiredAccumulated (array of all shots that have been fired in the game)
+	 * @param row
+	 * @param column
+	 */
+	public void updateShotsFired(int row, int column){
+		this.shotsFired ++;
+		shotsFiredAccumulated[row][column] = true;			
 
+	}
 	
 	
+	/**
+	 * Given an x and y coordinate, returns the ship type of that location in the ocean (as a string)
+	 * @param xCoordinate
+	 * @param yCoordinate
+	 * @param ocean
+	 * @return the ship type at xCoordinate, yCoordinate
+	 */
+	public String getShipAtLocation(int xCoordinate, int yCoordinate){
+		Ship[][] ships = this.getShipArray();
+		String shipType = ships[xCoordinate][yCoordinate].getShipType();
+		return shipType;
+	}
+	
+	
+	/**
+	 * Prints the ocean out. 
+	 * '.' marks an unshot-location
+	 * '-' marks shot location that's empty sea
+	 * 'S' marks a shot location where a ship is located
+	 * 'x' marks a sunk ship
+	 */
 	public void print(){
 		System.out.print("   ");
 		for (int i = 0; i < 10; i++){ 			// printing header
 			System.out.print("  " + i + "  ");
 		}
 		
-		for (int i = 0; i < 10; i ++){ // rows
+		for (int i = 0; i < 10; i ++){ // each row rows
 			System.out.print("\n");
 			System.out.print("\n" + i + "  ");
 			
-			for (int j = 0; j < 10; j ++){	
-				System.out.print("  " + this.ships[i][j] + "  ");		
+			for (int j = 0; j < 10; j ++){
+				if (this.shotsFiredAccumulated[i][j]){ // shot has been fired at this location
+					System.out.print("  " + this.ships[i][j] + "  ");							
+				} else {
+					System.out.print("  .  ");
+				}
 			}		
 		}
 	}
 	
+	
+	/**
+	 * Determines if game is over or not. 
+	 * @return True if game is over (10 ships are sunk)
+	 */
 	public boolean isGameOver(){
 		if (this.shipsSunk >= 10){
 			return true;
@@ -167,5 +211,8 @@ public class Ocean {
 		return this.shipsSunk;
 	}
 
+	public boolean[][] getShotsFiredAccumulated(){
+		return this.shotsFiredAccumulated;
+	}
 	
 }

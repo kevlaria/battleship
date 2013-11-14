@@ -15,18 +15,56 @@ public class BattleShipGame {
 	
 	void run(){
 		Ocean ocean = new Ocean();
+		System.out.println("A fleet of zombie pirates are invading your territory! \nHelp your fellow countrymen and sink the pirates' fleet!");
 		this.initiateGame(ocean);
 	}
 	
+	
+	/**
+	 * Initiates the game, and loops until game is finished.
+	 * @param ocean
+	 */
 	public void initiateGame(Ocean ocean){
 		ocean.placeAllShipsRandomly();
-		this.printStatus(ocean);
-		int xCoordinate = this.inputCoordinate("x");
-		int yCoordinate = this.inputCoordinate("y");
-		System.out.print(xCoordinate);
-		System.out.print(yCoordinate);
+		boolean finished = ocean.isGameOver();
+		while (!finished){
+			this.printStatus(ocean);
+			int xCoordinate = this.inputCoordinate("x");
+			int yCoordinate = this.inputCoordinate("y");
+			this.fireShot(xCoordinate, yCoordinate, ocean);
+			finished = ocean.isGameOver();			
+		}
+		System.out.println("Congratulations!");
+		System.exit(0);
 	}
 	
+	
+	/**
+	 * Fires a shot. Prints out a message depending on a) whether a ship was hit or not, 
+	 * and b) whether a ship was sunk or not.
+	 * @param xCoordinate
+	 * @param yCoordinate
+	 * @param ocean
+	 */
+	public void fireShot(int xCoordinate, int yCoordinate, Ocean ocean){
+		System.out.println("You've just shot (" + xCoordinate + ", " + yCoordinate + ").");
+		int shipsSunkBefore = ocean.getShipsSunk();
+		boolean isHitSuccessful = ocean.shootAt(xCoordinate, xCoordinate);
+		
+		int shipsSunkAfter = ocean.getShipsSunk();
+		boolean newShipSunk = (shipsSunkBefore < shipsSunkAfter);
+		
+		if (isHitSuccessful && newShipSunk){
+			System.out.println("You sunk a " + ocean.getShipAtLocation(xCoordinate, yCoordinate) + "!");
+		} else if (isHitSuccessful){
+			System.out.println("You hit a ship!");
+		} else {
+			System.out.println("You hit a stray pigeon, but no ships.");
+		}
+	}
+	
+	
+
 	
 	/**
 	 * Asks the user to provide the x or y coordinate of the shot
@@ -98,8 +136,8 @@ public class BattleShipGame {
 		int shotsFired = ocean.getShotsFired();
 		int shipsSunk = ocean.getShipsSunk();
 		int hitCount = ocean.getHitCount();
-		ocean.print();
-		
+		System.out.println("\n\n\n************");
+		ocean.print();		
 		System.out.println("\n\n\n************");
 		System.out.println("Your status:");
 		System.out.println("\tYou have fired " + shotsFired + " shot(s).");

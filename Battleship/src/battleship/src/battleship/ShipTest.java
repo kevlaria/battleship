@@ -128,7 +128,8 @@ public class ShipTest {
 		cruiser.shootAt(5, 7);
 		cruiser.shootAt(5, 8);
 		assertEquals("x", cruiser.toString());
-		assertEquals(".", ocean.ships[0][0].toString()); // should be empty sea
+		Ship[][] ships = ocean.getShipArray();
+		assertEquals(".", ships[0][0].toString()); // should be empty sea
 	}
 	
 	@Test

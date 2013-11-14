@@ -34,11 +34,24 @@ public class OceanTest {
 	
 	@Test
 	public void testisOccupied() {
-		assertFalse(ocean.isOccupied(3, 5));
-		
-		// Need test cases when battleship is added
+		assertFalse(ocean.isOccupied(2, 1));
+		battleship.placeShipAt(1, 1, true, ocean); // should occupy (1,1), (2,1), (3,1) and (4,1)
+		assertTrue(ocean.isOccupied(2,1));
 	}
 
+	
+	@Test
+	public void testupdateShotsFired(){
+		assertEquals(0, ocean.getShotsFired());
+		assertFalse(ocean.getShotsFiredAccumulated()[5][0]);
+		ocean.updateShotsFired(5,0);
+		assertEquals(1, ocean.getShotsFired());
+		assertTrue(ocean.getShotsFiredAccumulated()[5][0]);
+		ocean.updateShotsFired(5,0);
+		assertEquals(2, ocean.getShotsFired());	
+		assertTrue(ocean.getShotsFiredAccumulated()[5][0]);
+	}
+	
 	
 	@Test
 	public void testshootAtOcean(){
@@ -51,7 +64,14 @@ public class OceanTest {
 		assertFalse(battleship.hit[2]);
 		assertEquals(3, ocean.getShotsFired());
 		assertEquals(2, ocean.getHitCount());
-		
+		assertTrue(ocean.shootAt(2, 1));
+		assertEquals(4, ocean.getShotsFired());
+		assertEquals(3, ocean.getHitCount());
+		boolean[][] shotsFiredAccumulated = ocean.getShotsFiredAccumulated();
+		assertTrue(shotsFiredAccumulated[0][0]);
+		assertTrue(shotsFiredAccumulated[1][1]);
+		assertFalse(shotsFiredAccumulated[3][1]);
+
 		assertEquals(0, ocean.getShipsSunk());
 		submarine.placeShipAt(9,9, true, ocean);
 		assertTrue(ocean.shootAt(9,  9));
@@ -60,8 +80,16 @@ public class OceanTest {
 		assertTrue(ocean.shootAt(3,  1));
 		assertTrue(ocean.shootAt(4,  1));
 		assertEquals(2, ocean.getShipsSunk());
-
 	}
+	
+	@Test
+	public void testgetShipAtLocation(){
+		battleship.placeShipAt(1, 1, true, ocean); // should occupy (1,1), (2,1), (3,1) and (4,1)
+		assertEquals("Battleship", ocean.getShipAtLocation(2, 1));
+		assertEquals("Battleship", ocean.getShipAtLocation(3, 1));
+		assertEquals("Empty Sea", ocean.getShipAtLocation(5, 1));
+	}
+	
 	
 	@Test
 	public void testisGameOver(){
@@ -85,11 +113,11 @@ public class OceanTest {
 		sub8.placeShipAt(9,3, true, ocean);
 		sub9.placeShipAt(9,1, true, ocean);
 		sub10.placeShipAt(1,1, true, ocean);
-		assertFalse(ocean.isGameOver());
 		ocean.shootAt(9, 9);
 		ocean.shootAt(7, 9);
 		ocean.shootAt(5, 9);
 		ocean.shootAt(3, 9);
+		ocean.print();
 		ocean.shootAt(1, 9);
 		ocean.shootAt(9, 7);
 		ocean.shootAt(9, 5);
@@ -145,6 +173,11 @@ public class OceanTest {
 		assertNotSame(ocean, ocean2);
 	}
 
+	@Test
+	
+	public void testprint(){
+		// Not tested as only prints out to screen - does not return anything
+	}
 
 
 }
