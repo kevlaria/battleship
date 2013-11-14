@@ -117,7 +117,6 @@ public class OceanTest {
 		ocean.shootAt(7, 9);
 		ocean.shootAt(5, 9);
 		ocean.shootAt(3, 9);
-		ocean.print();
 		ocean.shootAt(1, 9);
 		ocean.shootAt(9, 7);
 		ocean.shootAt(9, 5);

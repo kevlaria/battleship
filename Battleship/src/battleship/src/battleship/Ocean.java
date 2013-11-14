@@ -142,15 +142,15 @@ public class Ocean {
 	
 	
 	/**
-	 * Given an x and y coordinate, returns the ship type of that location in the ocean (as a string)
-	 * @param xCoordinate
-	 * @param yCoordinate
+	 * Given an row and column coordinate, returns the ship type of that location in the ocean (as a string)
+	 * @param row
+	 * @param column
 	 * @param ocean
 	 * @return the ship type at xCoordinate, yCoordinate
 	 */
-	public String getShipAtLocation(int xCoordinate, int yCoordinate){
+	public String getShipAtLocation(int row, int column){
 		Ship[][] ships = this.getShipArray();
-		String shipType = ships[xCoordinate][yCoordinate].getShipType();
+		String shipType = ships[row][column].getShipType();
 		return shipType;
 	}
 	

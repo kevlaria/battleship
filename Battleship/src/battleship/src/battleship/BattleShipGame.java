@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class BattleShipGame {
 
-	Ocean ocean;
+	private Ocean ocean;
 	
 	/**
 	 * @param args
@@ -29,9 +29,9 @@ public class BattleShipGame {
 		boolean finished = ocean.isGameOver();
 		while (!finished){
 			this.printStatus(ocean);
-			int xCoordinate = this.inputCoordinate("x");
-			int yCoordinate = this.inputCoordinate("y");
-			this.fireShot(xCoordinate, yCoordinate, ocean);
+			int row = this.inputCoordinate("row");
+			int column = this.inputCoordinate("column");
+			this.fireShot(row, column, ocean);
 			finished = ocean.isGameOver();			
 		}
 		System.out.println("Congratulations!");
@@ -46,16 +46,16 @@ public class BattleShipGame {
 	 * @param yCoordinate
 	 * @param ocean
 	 */
-	public void fireShot(int xCoordinate, int yCoordinate, Ocean ocean){
-		System.out.println("You've just shot (" + xCoordinate + ", " + yCoordinate + ").");
+	public void fireShot(int row, int column, Ocean ocean){
+		System.out.println("You've just fired a shot at (" + row + ", " + column + ").");
 		int shipsSunkBefore = ocean.getShipsSunk();
-		boolean isHitSuccessful = ocean.shootAt(xCoordinate, xCoordinate);
+		boolean isHitSuccessful = ocean.shootAt(row, column);
 		
 		int shipsSunkAfter = ocean.getShipsSunk();
 		boolean newShipSunk = (shipsSunkBefore < shipsSunkAfter);
 		
 		if (isHitSuccessful && newShipSunk){
-			System.out.println("You sunk a " + ocean.getShipAtLocation(xCoordinate, yCoordinate) + "!");
+			System.out.println("You sunk a " + ocean.getShipAtLocation(row, column) + "!");
 		} else if (isHitSuccessful){
 			System.out.println("You hit a ship!");
 		} else {
@@ -76,7 +76,7 @@ public class BattleShipGame {
 		String input = "";
 		boolean valid = false;
 		while(!valid){
-			System.out.print("\nPlease enter the " + axis + " coordinate of your shot: ");
+			System.out.print("\nWhich " + axis + " do you want to aim at? ");
 			input = scanner.nextLine();
 			if(isValid(input)){
 				valid = true;
@@ -145,4 +145,7 @@ public class BattleShipGame {
 		System.out.println("\tYou have sunk " + shipsSunk + " ship(s).");
 	}
 
+	public Ocean getOcean(){
+		return this.ocean;
+	}
 }
