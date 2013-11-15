@@ -1,3 +1,5 @@
+// Priyank Chaudhary, Kevin Lee
+
 package battleship;
 
 public class EmptySea extends Ship{
