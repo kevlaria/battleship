@@ -58,7 +58,7 @@ public class BattleShipGame {
 		boolean newShipSunk = (shipsSunkBefore < shipsSunkAfter);
 		
 		if (isHitSuccessful && newShipSunk){
-			System.out.println("\nYou sank a " + ocean.getShipAtLocation(row, column).toLowerCase() + "!");
+			System.out.println("\nYou just sank a " + ocean.getShipAtLocation(row, column).toLowerCase() + "!");
 		} else if (isHitSuccessful){
 			System.out.println("\nYou hit a ship!");
 		} else {
@@ -84,10 +84,10 @@ public class BattleShipGame {
 			System.out.println("\nThat nearly hit the moon. Try again.");
 			break;
 		case 4:
-			System.out.println("\nThe cannonball sailed through the air gracefully, \nfailing to hit anything.");
+			System.out.println("\nAre you a zombie in disguise?");
 			break;
 		case 5:
-			System.out.println("\nIf this were a diving competition, \nthe cannonball would have won first prize. \n\nDidn't hit anything though.");
+			System.out.println("\nAhem. You hit Arvind. \nNow YOU will have to write the next assignment!");
 			break;
 		case 6:
 			System.out.println("\n...Nope...");
@@ -100,6 +100,9 @@ public class BattleShipGame {
 			break;			
 		case 9:
 			System.out.println("\nMaybe you should try aiming first before firing?");
+			break;
+		default:
+			System.out.println("\nThe cannonball sailed through the air gracefully, \nfailing to hit anything.");
 			break;			
 			
 		}

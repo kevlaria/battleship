@@ -67,17 +67,20 @@ public class OceanTest {
 		assertEquals(3, ocean.getShotsFired());
 		assertEquals(2, ocean.getHitCount());
 		assertTrue(ocean.shootAt(2, 1));
-		assertEquals(4, ocean.getShotsFired());
-		assertEquals(3, ocean.getHitCount());
+		assertEquals(4, ocean.getShotsFired()); 
+		assertEquals(3, ocean.getHitCount()); // ensure that hit count increases even if you fire at a previously hit location
 		boolean[][] shotsFiredAccumulated = ocean.getShotsFiredAccumulated();
 		assertTrue(shotsFiredAccumulated[0][0]);
 		assertTrue(shotsFiredAccumulated[1][1]);
 		assertFalse(shotsFiredAccumulated[3][1]);
-
+		
 		assertEquals(0, ocean.getShipsSunk());
 		submarine.placeShipAt(9,9, true, ocean);
 		assertTrue(ocean.shootAt(9,  9));
+		assertEquals(4, ocean.getHitCount());
 		assertEquals(1, ocean.getShipsSunk());
+		ocean.shootAt(9, 9);
+		assertEquals(4, ocean.getHitCount()); // ensure that hit count doesn't increase when you fire at a sunk ship
 
 		assertTrue(ocean.shootAt(3,  1));
 		assertTrue(ocean.shootAt(4,  1));
