@@ -1,4 +1,3 @@
-// Priyank Chaudhary, Kevin Lee
 package battleship;
 
 public class Destroyer extends Ship{

@@ -1,5 +1,3 @@
-// Priyank Chaudhary, Kevin Lee
-
 package battleship;
 
 import static org.junit.Assert.*;
